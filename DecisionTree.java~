@@ -1,0 +1,76 @@
+import java.io.*;
+
+public class DecisionTree implements Classifier {
+
+    private String author = "Helen and Aditya";
+    private String description = "A decision tree classifier";
+    /* The root of the decision tree. See Node class for more details*/
+    private Node root;
+
+    /** 
+     * A decision tree 
+     **/
+    public DecisionTree(DataSet d) {
+    }
+
+    /** 
+     *  A simple decision tree for use in AdaBoost. The stump is parameterized 
+     *  the data set, the weights of each of the examples, and the desired 
+     *  depth of the tree (typically very small) 
+     **/
+    public DecisionTree(DataSet d, double[] weights, int depth) {
+    }
+    
+    /** 
+     * Helper method to calculate information gain to decide which 
+     * attribute to split on
+     */
+    private double infoGain() {
+
+    }
+
+    public int predict(int[] ex) {
+	Node node = root;
+	int label;
+	while (node != null) {
+	    int attrVal = ex[node.attr];
+	    int label = node.label;
+	    if (node.children != null)
+		node = node.children.get(attrVal);
+	    else break;
+	}
+	return label;
+    }
+
+    /** This method returns a description of the learning algorithm. */
+    public String algorithmDescription() {
+	return description;
+    }
+
+    /** This method returns the author of this program. */
+    public String author() {
+	return author;
+    }
+
+    /** A simple main for testing this algorithm.  This main reads a
+     * filestem from the command line, runs the learning algorithm on
+     * this dataset, and prints the test predictions to filestem.testout.
+     */
+    public static void main(String argv[])
+	throws FileNotFoundException, IOException {
+
+	if (argv.length < 1) {
+	    System.err.println("argument: filestem");
+	    return;
+	}
+
+	String filestem = argv[0];
+
+	DataSet d = new DataSet(filestem);
+
+	Classifier c = new DecisionTree(d);
+
+	d.printTestPredictions(c, filestem);
+    }
+
+}

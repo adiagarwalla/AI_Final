@@ -1,0 +1,12 @@
+public class Node {
+
+    public int attr;
+    public int attrVal;
+    public Node(){
+
+    }
+
+    
+
+
+}
