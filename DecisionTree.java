@@ -10,9 +10,18 @@ public class DecisionTree implements Classifier {
     // The root of the decision tree. See Node class for more details
     private Node root;
 
-    /** A decision tree */
+    /** Constructs a decision tree */
     public DecisionTree(DataSet d) {
 	this.d = d;
+	List<Integer> examples = new ArrayList<Integer>();
+	List<Integer> attributes = new ArrayList<Integer>();
+	for (int i = 0; i < d.numTrainExs; i++) {
+	    examples.add(i);
+	}
+	for (int i = 0; i < d.numAttrs; i++) {
+	    attributes.add(i);
+	}
+	root = DecisionTreeLearning(examples, attributes);
     }
 
     /** A simple decision tree for use in AdaBoost. The stump is parameterized 
@@ -23,6 +32,54 @@ public class DecisionTree implements Classifier {
 	this.d = d;
     }
     
+    private Node DecisionTreeLearning(List<Integer> examples, List<Integer> attributes) {
+	if (examples.size == 0) return null;
+
+	Node node = new Node();
+	int n = 0;
+	int p = 0;
+	for (int i: examples) {
+	    if (d.trainLabel[i] == P) p++;
+	    else n++;
+	}
+	
+	if (p == 0) {
+	    node.label = n;
+	}
+	else if (n == 0) {
+	    node.label = p;
+	}
+	else if (attributes.size == 0) {
+	    node.label = p > n? p: n;
+	}
+	else {
+	    //  decide which attribute to split on
+	    int maxGain = -1;
+	    for (int i: attributes) {
+		int attr = -1;
+		int temp = infoGain(i, examples);
+		if (temp > maxGain) {
+		    maxGain = temp;
+		    attr = i;
+		}
+	    }
+	    node.attr = attr;
+	    node.children = new Node[d.attrVals[attr].length];
+	    //  calculate subtrees
+	    for (int i = 0; i < node.children.length; i++) {
+		//  remove attr
+		attributes.remove(attr);
+		//  new subset of examples
+		List<Integer> newExamples = new List<Integer>();
+		for (int e: examples) {
+		    if (d.trainEx[e][attr] == i) newExamples.add(e);
+		}
+		node.children[i] = DecisionTreeLearning(newExamples, attributes);
+	    }
+	}
+	return node;
+    }
+
     /** Information gain if splitting set examples on attribute attr */
     private double infoGain(int attr, List<Integer> examples) {
 	int numVals = d.attrVals[attr].length;
@@ -58,11 +115,10 @@ public class DecisionTree implements Classifier {
 	Node node = root;
 	int label;
 	while (node != null) {
+	    if (node.children == null) break;
 	    int attrVal = ex[node.attr];
 	    int label = node.label;
-	    if (node.children != null)
-		node = node.children[attrVal];
-	    else break;
+	    node = node.children[attrVal];
 	}
 	return label;
     }
