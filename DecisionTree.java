@@ -63,10 +63,10 @@ public class DecisionTree implements Classifier {
 	    }
 	    node.attr = attr;
 	    node.children = new Node[d.attrVals[attr].length];
+	    
 	    //  calculate subtrees
+	    attributes.remove(attr);
 	    for (int i = 0; i < node.children.length; i++) {
-		//  remove attr
-		attributes.remove(attr);
 		//  new subset of examples
 		List<Integer> newExamples = new ArrayList<Integer>();
 		for (int e: examples) {
