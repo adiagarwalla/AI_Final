@@ -5,7 +5,7 @@ public class Node {
     //  children[i] = subtree where attr = i
     public Node[] children;
     //  the classification if this node is a leaf.  
-    public int label;
+    public int classification;
 
     /** 
      * Constructor 
