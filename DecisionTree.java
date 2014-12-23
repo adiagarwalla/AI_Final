@@ -32,12 +32,65 @@ public class DecisionTree implements Classifier {
      *  the data set, the weights of each of the examples, and the desired 
      *  depth of the tree (typically very small) 
      */
-    public DecisionTree(DataSet d, double[] weights, int depth) {
-	this.d = d;
+    public DecisionTree(DataSet d, int attr) {
+    	
+    	this.d = d;
+
+    	//  TODO: set N
+		//  TODO: set P
+		
+		List<Integer> examples = new ArrayList<Integer>();
+		
+		for (int i = 0; i < d.numTrainExs; i++) {
+	    	examples.add(i);
+		}
+
+		root = DecisionStumpLearning(examples, attributes, attr); 
     }
 
-    /** Recursively constructs a Decision Tree */
-    private Node DecisionTreeLearning(List<Integer> examples, List<Integer> attributes) {
+    // Construct the Decision Stump
+    private Node DecisionStumpLearning(List<Integer> examples, int attr)
+    {
+    	if (examples.size() == 0) return null;
+
+		Node node = new Node();
+		int n = 0;
+		int p = 0;
+		for (int i: examples) {
+		    if (d.trainLabel[i] == P) p++;
+		    else n++;
+		}
+	
+		// classification based on plurality
+		node.classification = p > n? p: n;
+
+		if (!(p == 0 || n == 0))
+		{
+	    	// Set attribute for node
+	    	node.attr = attr;
+
+	    	// Set length of children for the node
+	    	node.children = new Node[d.attrVals[attr].length];
+
+	    	for (int i = 0; i < node.children.length; i++)
+	    	{
+	    		//  new subset of examples
+				List<Integer> newExamples = new ArrayList<Integer>();
+				
+				for (int e: examples) {
+			    	if (d.trainEx[e][attr] == i) newExamples.add(e);
+				}
+			
+				node.children[i] = DecisionStumpLearning(newExamples, attr);
+			}
+		}
+
+		return node;
+    }
+
+    /* Recursively constructs a Decision Tree */
+    private Node DecisionTreeLearning(List<Integer> examples, 
+    												List<Integer> attributes) {
 	if (examples.size() == 0) return null;
 
 	Node node = new Node();
@@ -49,7 +102,8 @@ public class DecisionTree implements Classifier {
 	}
 	//  classification based on plurality
 	node.classification = p > n? p: n;
-	// continue if not all examples have same classification and attributes != empty
+	// continue if not all examples have same classification and attributes != 
+	// empty
 	if (!(p == 0 || n == 0 || attributes.size() == 0)) {
 	    //  decide which attribute to split on
 	    double maxGain = Double.NEGATIVE_INFINITY;
