@@ -51,7 +51,7 @@ public class DecisionTree implements Classifier {
 		Node child = new Node();
 		int p = 0;
 		int n = 0;
-		for (int e = 0; e < numTrainExs; e++) {
+		for (int e = 0; e < d.numTrainExs; e++) {
 		    if (d.trainEx[e][attr] == i) {
 			if (d.trainLabel[e] == P) p++;
 			else n++;
