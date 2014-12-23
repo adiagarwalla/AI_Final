@@ -1,45 +1,178 @@
 import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DecisionTree implements Classifier {
 
+    private DataSet d;
+    private int P; //  positive label
+    private int N; //  negative label
     private String author = "Helen and Aditya";
     private String description = "A decision tree classifier";
-    /* The root of the decision tree. See Node class for more details*/
+    // The root of the decision tree. See Node class for more details
     private Node root;
 
-    /** 
-     * A decision tree 
-     **/
+    /** Constructs a decision tree */
     public DecisionTree(DataSet d) {
+	this.d = d;
+	//  TODO: set N
+	//  TODO: set P
+	List<Integer> examples = new ArrayList<Integer>();
+	List<Integer> attributes = new ArrayList<Integer>();
+	for (int i = 0; i < d.numTrainExs; i++) {
+	    examples.add(i);
+	}
+	for (int i = 0; i < d.numAttrs; i++) {
+	    attributes.add(i);
+	}
+	root = DecisionTreeLearning(examples, attributes);
     }
 
-    /** 
-     *  A simple decision tree for use in AdaBoost. The stump is parameterized 
+    /** A simple decision tree for use in AdaBoost. The stump is parameterized 
      *  the data set, the weights of each of the examples, and the desired 
      *  depth of the tree (typically very small) 
-     **/
-    public DecisionTree(DataSet d, double[] weights, int depth) {
-    }
-    
-    /** 
-     * Helper method to calculate information gain to decide which 
-     * attribute to split on
      */
-    private double infoGain() {
+    public DecisionTree(DataSet d, int attr) {
+    	
+    	this.d = d;
 
+    	//  TODO: set N
+		//  TODO: set P
+		
+		List<Integer> examples = new ArrayList<Integer>();
+		
+		for (int i = 0; i < d.numTrainExs; i++) {
+	    	examples.add(i);
+		}
+
+		root = DecisionStumpLearning(examples, attributes, attr); 
     }
 
+    // Construct the Decision Stump
+    private Node DecisionStumpLearning(List<Integer> examples, int attr)
+    {
+    	if (examples.size() == 0) return null;
+
+		Node node = new Node();
+		int n = 0;
+		int p = 0;
+		for (int i: examples) {
+		    if (d.trainLabel[i] == P) p++;
+		    else n++;
+		}
+	
+		// classification based on plurality
+		node.classification = p > n? p: n;
+
+		if (!(p == 0 || n == 0))
+		{
+	    	// Set attribute for node
+	    	node.attr = attr;
+
+	    	// Set length of children for the node
+	    	node.children = new Node[d.attrVals[attr].length];
+
+	    	for (int i = 0; i < node.children.length; i++)
+	    	{
+	    		//  new subset of examples
+				List<Integer> newExamples = new ArrayList<Integer>();
+				
+				for (int e: examples) {
+			    	if (d.trainEx[e][attr] == i) newExamples.add(e);
+				}
+			
+				node.children[i] = DecisionStumpLearning(newExamples, attr);
+			}
+		}
+
+		return node;
+    }
+
+    /* Recursively constructs a Decision Tree */
+    private Node DecisionTreeLearning(List<Integer> examples, 
+    												List<Integer> attributes) {
+	if (examples.size() == 0) return null;
+
+	Node node = new Node();
+	int n = 0;
+	int p = 0;
+	for (int i: examples) {
+	    if (d.trainLabel[i] == P) p++;
+	    else n++;
+	}
+	//  classification based on plurality
+	node.classification = p > n? p: n;
+	// continue if not all examples have same classification and attributes != 
+	// empty
+	if (!(p == 0 || n == 0 || attributes.size() == 0)) {
+	    //  decide which attribute to split on
+	    double maxGain = Double.NEGATIVE_INFINITY;
+	    int attr = -1;
+	    for (int i: attributes) {
+		double temp = infoGain(i, examples);
+		if (temp > maxGain) {
+		    maxGain = temp;
+		    attr = i;
+		}
+	    }
+	    node.attr = attr;
+	    node.children = new Node[d.attrVals[attr].length];
+	    
+	    //  calculate subtrees
+	    attributes.remove(attr);
+	    for (int i = 0; i < node.children.length; i++) {
+		//  new subset of examples
+		List<Integer> newExamples = new ArrayList<Integer>();
+		for (int e: examples) {
+		    if (d.trainEx[e][attr] == i) newExamples.add(e);
+		}
+		node.children[i] = DecisionTreeLearning(newExamples, attributes);
+	    }
+	}
+	return node;
+    }
+
+    /** Information gain if splitting set examples on attribute attr */
+    private double infoGain(int attr, List<Integer> examples) {
+	int numVals = d.attrVals[attr].length;
+	int p = 0;
+	int n = 0;
+	for (int e: examples) {
+	    if (d.trainLabel[e] == P) p++;
+	    else n++; 
+	}
+	double before = entropy(p/(p+n));
+	double remainder = 0;
+	for (int i = 0; i < numVals; i++) {
+	    int nk = 0;
+	    int pk = 0;
+	    for (int e: examples) {
+		if (d.trainEx[e][attr] == i) {
+		    if (d.trainLabel[e] == P) pk++;
+		    else nk++;
+		}
+	    }
+	    remainder += ((pk + nk)/(p + n)) * entropy((pk)/(pk + nk)); 
+	}
+	return before - remainder;
+    }
+    /** Entropy of a Boolean random variable that is true with probability q */
+    private double entropy(double q) {
+	double q2 = 1-q;
+	return -(q*Math.log(q)/Math.log(2) + q2*Math.log(q2)/Math.log(2));
+    }
+
+    /** Prediction based on the decision tree generated by constructor */
     public int predict(int[] ex) {
 	Node node = root;
-	int label;
+	int classification = N;
 	while (node != null) {
+	    if (node.children == null) break;
 	    int attrVal = ex[node.attr];
-	    int label = node.label;
-	    if (node.children != null)
-		node = node.children.get(attrVal);
-	    else break;
+	    classification = node.classification;
+	    node = node.children[attrVal];
 	}
-	return label;
+	return classification;
     }
 
     /** This method returns a description of the learning algorithm. */
