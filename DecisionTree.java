@@ -61,7 +61,7 @@ public class DecisionTree implements Classifier {
 	    int attrVal = ex[node.attr];
 	    int label = node.label;
 	    if (node.children != null)
-		node = node.children.get(attrVal);
+		node = node.children[attrVal];
 	    else break;
 	}
 	return label;
