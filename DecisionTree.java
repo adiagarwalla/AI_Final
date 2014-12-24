@@ -30,12 +30,7 @@ public class DecisionTree implements Classifier {
      *  by the data set and the desired root. 
      */
     public DecisionTree(DataSet d, int attr) {
-       
-    	this.d = d;
-
-    	//  TODO: set N
-	//  TODO: set P
-		
+	this.d = d;
 	
 	Node node = new Node();
 	// Set attribute for node
