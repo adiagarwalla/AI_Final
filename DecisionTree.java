@@ -5,8 +5,8 @@ import java.util.List;
 public class DecisionTree implements Classifier {
 
     private DataSet d;
-    private int P; //  positive label
-    private int N; //  negative label
+    private int P = 0; //  positive label
+    private int N = 1; //  negative label
     private String author = "Helen and Aditya";
     private String description = "A decision tree classifier";
     // The root of the decision tree. See Node class for more details
@@ -15,8 +15,6 @@ public class DecisionTree implements Classifier {
     /** Constructs a decision tree */
     public DecisionTree(DataSet d) {
 	this.d = d;
-	//  TODO: set N
-	//  TODO: set P
 	List<Integer> examples = new ArrayList<Integer>();
 	List<Integer> attributes = new ArrayList<Integer>();
 	for (int i = 0; i < d.numTrainExs; i++) {

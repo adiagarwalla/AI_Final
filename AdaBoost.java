@@ -18,8 +18,8 @@ public class AdaBoost implements Classifier {
     private double[] alpha;
 
     //  the two classifications
-    private int P;
-    private int N;
+    private final int P = 0;
+    private final int N = 1;
 
     // Number of rounds-- set through command line for systematic experiments
     private int rounds;
@@ -31,9 +31,6 @@ public class AdaBoost implements Classifier {
     // PROVIDE GOOD DESCRIPTION HERE
     public AdaBoost(DataSet d, int rounds){
 	this.rounds = rounds;
-	// TODO set P
-	// TODO set N
-
 
     	// Assign number of weights from training examples
     	weights = new double[d.numTrainExs];
