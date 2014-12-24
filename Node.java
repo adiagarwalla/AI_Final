@@ -1,10 +1,9 @@
 public class Node {
 
-    //  the attribute that the tree is splitting on
+    //  the attribute that the tree is splitting on. if -1, no attribute
     public int attr;
-    //  children[i] = subtree where attr = i
+    //  children[i] = subtree where attribute value  = i
     public Node[] children;
-    //  the classification if this node is a leaf.  
     public int classification;
 
     /** 

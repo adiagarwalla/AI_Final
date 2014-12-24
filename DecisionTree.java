@@ -77,7 +77,7 @@ public class DecisionTree implements Classifier {
 	    else n++;
 	}
 	//  classification based on plurality
-	node.classification = p > n? p: n;
+	node.classification = p > n? P: N;
 	// continue if not all examples have same classification and attributes != 
 	// empty
 	if (!(p == 0 || n == 0 || attributes.size() == 0)) {
