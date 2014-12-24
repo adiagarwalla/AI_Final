@@ -57,7 +57,7 @@ public class DecisionTree implements Classifier {
 			else n++;
 		    }
 		}
-		child.classification = p > n? p : n;
+		child.classification = p > n? P : N;
 		node.children[i] = child;
 	    }
 	
