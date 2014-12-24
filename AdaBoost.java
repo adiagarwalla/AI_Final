@@ -73,11 +73,11 @@ public class AdaBoost implements Classifier {
                 for (int j = 0; j < d.numTrainExs; j++){
 		    if (!validatePrediction[i][j])
 			currentError += weights[j];
-		    
-                    if (currentError < minError){
-			minError = currentError;
-			minAttr = i;
-		    }
+		                        
+		}
+		if (currentError < minError){
+		    minError = currentError;
+		    minAttr = i;
 		}
             }
 
