@@ -17,19 +17,23 @@ public class GenerateTest {
 	Scanner scanner = new Scanner(fr);
 	
 	PrintWriter test = new PrintWriter(filestem2+".test");
+	PrintWriter answers = new PrintWriter(filestem2+".answers");
 	PrintWriter train = new PrintWriter(filestem2+".train");
 	int count = 0;
 	while (scanner.hasNextLine()) {
 	    String line = scanner.nextLine();
 	    if (count < trainSize) 
 		train.println(line);
-	    else 
+	    else {
 		test.println(line.substring(0, line.length() - 2));
+		answers.println(line.charAt(line.length() - 1));
+	    }
 	    count++;
 	}
 	train.close();
 	test.close();
-
+	answers.close();
+	
     }
 
 
