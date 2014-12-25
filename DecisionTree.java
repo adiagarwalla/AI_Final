@@ -127,8 +127,9 @@ public class DecisionTree implements Classifier {
 		    else nk++;
 		}
 	    }
-	    
-	    remainder += ((double) (pk + nk)/(p + n)) * entropy((double)pk/(pk + nk)); 
+
+	    if (pk + nk != 0)
+		remainder += ((double) (pk + nk)/(p + n)) * entropy((double)pk/(pk + nk)); 
 	}
 	return entropy((double)p/(p+n)) - remainder;
     }
@@ -181,14 +182,14 @@ public class DecisionTree implements Classifier {
 	DataSet d = new DataSet(filestem);
 
 	Classifier c = new DecisionTree(d);
-	Classifier stump1 = new DecisionTree(d, 0);
-	Classifier stump2 = new DecisionTree(d, 1);
-	Classifier stump3 = new DecisionTree(d, 2);
+	//Classifier stump1 = new DecisionTree(d, 0);
+	//Classifier stump2 = new DecisionTree(d, 1);
+	//Classifier stump3 = new DecisionTree(d, 2);
 
 	d.printTestPredictions(c, filestem);
-	d.printTestPredictions(stump1, filestem+"_stump1");
-	d.printTestPredictions(stump2, filestem+"_stump2");
-	d.printTestPredictions(stump3, filestem+"_stump3");
+	//d.printTestPredictions(stump1, filestem+"_stump1");
+	//d.printTestPredictions(stump2, filestem+"_stump2");
+	//d.printTestPredictions(stump3, filestem+"_stump3");
     }
 
 }
