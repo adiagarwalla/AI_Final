@@ -14,59 +14,59 @@ public class DecisionTree implements Classifier {
 
     /** Constructs a decision tree */
     public DecisionTree(DataSet d) {
-		this.d = d;
-		List<Integer> examples = new ArrayList<Integer>();
-		List<Integer> attributes = new ArrayList<Integer>();
-		for (int i = 0; i < d.numTrainExs; i++) {
-		    examples.add(i);
-		}
-		for (int i = 0; i < d.numAttrs; i++) {
-		    attributes.add(i);
-		}
-		root = DecisionTreeLearning(examples, attributes);
+	this.d = d;
+	List<Integer> examples = new ArrayList<Integer>();
+	List<Integer> attributes = new ArrayList<Integer>();
+	for (int i = 0; i < d.numTrainExs; i++) {
+	    examples.add(i);
+	}
+	for (int i = 0; i < d.numAttrs; i++) {
+	    attributes.add(i);
+	}
+	root = DecisionTreeLearning(examples, attributes);
     }
 
     /** A simple decision tree for use in AdaBoost. The stump is parameterized 
      *  by the data set and the desired root. 
      */
     public DecisionTree(DataSet d, int attr) {
-		this.d = d;
+	this.d = d;
+	
+	Node node = new Node();
+	
+	// Set attribute for node
+	node.attr = attr;
+	
+	// Set children for the node
+	node.children = new Node[d.attrVals[attr].length];
+	
+	for (int i = 0; i < node.children.length; i++)
+	    {
+		Node child = new Node();
+		int p = 0;
+		int n = 0;
 		
-		Node node = new Node();
-
-		// Set attribute for node
-		node.attr = attr;
-		
-		// Set children for the node
-		node.children = new Node[d.attrVals[attr].length];
-		
-		for (int i = 0; i < node.children.length; i++)
-		{
-			Node child = new Node();
-			int p = 0;
-			int n = 0;
-
-			for (int e = 0; e < d.numTrainExs; e++) {
-			    if (d.trainEx[e][attr] == i) 
-			    {
-					if (d.trainLabel[e] == P) 
-						p++;
-					else 
-						n++;
-			    }
+		for (int e = 0; e < d.numTrainExs; e++) {
+		    if (d.trainEx[e][attr] == i) 
+			{
+			    if (d.trainLabel[e] == P) 
+				p++;
+			    else 
+				n++;
 			}
-			child.classification = p > n ? P : N;
-			node.children[i] = child;
 		}
-		
-		root = node;
+		child.classification = p > n ? P : N;
+		node.children[i] = child;
+	    }
+	
+	root = node;
     }
-
+    
     /* Recursively constructs a Decision Tree */
     private Node DecisionTreeLearning(List<Integer> examples, 
 				      List<Integer> attributes) {
 	if (examples.size() == 0) return null;
-
+	
 	Node node = new Node();
 	int n = 0;
 	int p = 0;
