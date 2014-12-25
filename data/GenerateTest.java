@@ -11,8 +11,8 @@ public class GenerateTest {
 	    return;
 	}
 	String filestem = args[0];
-	String filestem2 = filestem+"_2";
 	int trainSize = Integer.parseInt(args[1]);
+	String filestem2 = filestem+"_"+trainSize;
 	FileReader fr = new FileReader(filestem+".train");
 	Scanner scanner = new Scanner(fr);
 	
@@ -25,8 +25,12 @@ public class GenerateTest {
 	    if (count < trainSize) 
 		train.println(line);
 	    else {
-		test.println(line.substring(0, line.length() - 2));
-		answers.println(line.charAt(line.length() - 1));
+		String[] temp = line.split(" ");
+		for (int i = 0; i < temp.length - 1; i++) {
+		    test.print(temp[i] + " ");
+		}
+		test.println();
+		answers.println(temp[temp.length-1]);
 	    }
 	    count++;
 	}
