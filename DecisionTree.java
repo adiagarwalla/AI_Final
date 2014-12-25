@@ -179,7 +179,7 @@ public class DecisionTree implements Classifier {
 
 	String filestem = argv[0];
 
-	DataSet d = new DataSet(filestem);
+	DataSet d = new DiscreteDataSet(filestem);
 
 	Classifier c = new DecisionTree(d);
 	//Classifier stump1 = new DecisionTree(d, 0);
