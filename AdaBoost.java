@@ -42,29 +42,20 @@ public class AdaBoost implements Classifier {
         for (int i = 0; i < d.numTrainExs; i++)
             weights[i] = 1.0 / d.numTrainExs;
 
-        validatePrediction = new boolean[d.numAttrs][d.numTrainExs];
+        // validatePrediction = new boolean[d.numAttrs][d.numTrainExs];
 
         // Get classification for each attribute
-        for (int i = 0; i < d.numAttrs; i++)
-        {
-            DecisionTree stump = new DecisionTree(d, i);
-
-            // Training examples that have wrong predictions for current
-            // attribute
-            for (int j = 0; j < d.numTrainExs; j++)
-            {
-                validatePrediction[i][j] = 
-                (stump.predict(d.trainEx[j]) == d.trainLabel[j]);
-            }        
-        }
-
-        // Print validatePrediction
         // for (int i = 0; i < d.numAttrs; i++)
         // {
-        //     for (int j = 0; j < d.numTrainExs; j++)
-        //         System.out.print(validatePrediction[i][j] + " ");
+        //     DecisionTree stump = new DecisionTree(d, i);
 
-        //     System.out.println();
+        //     // Training examples that have wrong predictions for current
+        //     // attribute
+        //     for (int j = 0; j < d.numTrainExs; j++)
+        //     {
+        //         validatePrediction[i][j] = 
+        //         (stump.predict(d.trainEx[j]) == d.trainLabel[j]);
+        //     }        
         // }
 
     	// Initialize array for hypotheses
@@ -76,31 +67,46 @@ public class AdaBoost implements Classifier {
     	// Iterate the entire process for the number of rounds
     	for (int counter = 0; counter < rounds; counter++)
         {
-            double minError = Double.POSITIVE_INFINITY;
-            int minAttr = -1;
+      //       double minError = Double.POSITIVE_INFINITY;
+      //       int minAttr = -1;
 
-    		// Get minimum error
-            for (int i = 0; i < d.numAttrs; i++)
+    		// // Get minimum error
+      //       for (int i = 0; i < d.numAttrs; i++)
+      //       {
+      //           double currentError = 0.0;
+		
+      //           for (int j = 0; j < d.numTrainExs; j++)
+      //           {
+      //               if (!validatePrediction[i][j])
+      //                   currentError += weights[j];
+      //           }
+		
+      //           if (currentError < minError){
+      //   		    minError = currentError;
+      //   		    minAttr = i;
+      //   		}
+      //       }
+
+            List<Integer> examples = new ArrayList<Integer>();
+
+            for (int i = 0; i < d.numTrainExs; i++)
             {
-                double currentError = 0.0;
-		
-                for (int j = 0; j < d.numTrainExs; j++)
-                {
-                    if (!validatePrediction[i][j])
-                        currentError += weights[j];
-                }
-		
-                if (currentError < minError){
-        		    minError = currentError;
-        		    minAttr = i;
-        		}
+                if (Math.random() <= weights[i])
+                    examples.add(i);
             }
 
             // Set hypothesis for current iteration
-            hypotheses[counter] = new DecisionTree(d, minAttr);
+            hypotheses[counter] = new DecisionTree(d, examples, 3);
 
-            // Set alpha
-            alpha[counter] = 0.5 * Math.log((1 - minError) / minError);
+            double error = 0.0;
+
+            for (int i = 0; i < d.numTrainExs; i++)
+            {
+                if (hypotheses[counter].predict(d.trainEx[i]) == d.trainLabel[i])
+                    weights[i] *= error/(1 - error);
+                else
+                    error += weights[i];
+            }
 
             // Sum of weights for normalization
             double sumWeights = 0.0;
@@ -108,10 +114,10 @@ public class AdaBoost implements Classifier {
             // Update weights
             for (int j = 0; j < d.numTrainExs; j++)
             {
-		        if (validatePrediction[minAttr][j])
-                    weights[j] *= Math.pow(Math.E, -alpha[counter]);
-                else
-                    weights[j] *= Math.pow(Math.E, alpha[counter]);
+		        // if (validatePrediction[minAttr][j])
+          //           weights[j] *= Math.pow(Math.E, -alpha[counter]);
+          //       else
+          //           weights[j] *= Math.pow(Math.E, alpha[counter]);
 		
                 // Calulate sum of weights for normalization
                 sumWeights += weights[j];
@@ -120,6 +126,9 @@ public class AdaBoost implements Classifier {
             // Normalize
             for (int j = 0; j < d.numTrainExs; j++)
                 weights[j] /= sumWeights;
+
+            // Set alpha
+            alpha[counter] = Math.log((1 - error) / error);
     	}
     }
     
@@ -166,38 +175,38 @@ public class AdaBoost implements Classifier {
 
         DataSet d = new DiscreteDataSet(filestem);
 
-        Classifier c = new AdaBoost(d, 150);
+        Classifier c = new AdaBoost(d, 500);
 
         d.printTestPredictions(c, filestem);
 
-        FileReader frTO = new FileReader(filestem+".testout");
-        FileReader frAns = new FileReader(filestem+".answers");
+        // FileReader frTO = new FileReader(filestem+".testout");
+        // FileReader frAns = new FileReader(filestem+".answers");
 
-        Scanner scannerTO = new Scanner(frTO);
-        Scanner scannerAns = new Scanner(frAns);
+        // Scanner scannerTO = new Scanner(frTO);
+        // Scanner scannerAns = new Scanner(frAns);
 
-        int skip = 0;
+        // int skip = 0;
 
-        while (skip < 4) {
+        // while (skip < 4) {
         
-            String line = scannerTO.nextLine();
-            skip++;
-        }
+        //     String line = scannerTO.nextLine();
+        //     skip++;
+        // }
 
-        int error = 0;
-        int numLines = 0;
+        // int error = 0;
+        // int numLines = 0;
 
-        while (scannerTO.hasNextLine())
-        {
-            String TO_Ans = scannerTO.nextLine();
-            String Ans = scannerAns.nextLine();
+        // while (scannerTO.hasNextLine())
+        // {
+        //     String TO_Ans = scannerTO.nextLine();
+        //     String Ans = scannerAns.nextLine();
 
-            numLines++;
+        //     numLines++;
 
-            if (!TO_Ans.equals(Ans))
-                error++;
-        }
+        //     if (!TO_Ans.equals(Ans))
+        //         error++;
+        // }
 
-        //System.out.println("Error rate: " + (double)error/numLines);
+        // System.out.println("Error rate: " + (double)error/numLines);
     }
 }
