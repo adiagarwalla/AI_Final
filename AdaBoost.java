@@ -9,7 +9,7 @@ public class AdaBoost implements Classifier {
 	
     // To be returned by the public methods for author and description
     private String author = "Helen and Aditya";
-    private String description = "An adaBoost classifier using decision stump as the weak learner";
+    private String description = "An adaBoost classifier using decision tree (max height 3) as the weak learner";
     
     // An array of example weights
     private double[] weights;
