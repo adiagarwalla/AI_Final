@@ -30,7 +30,7 @@ public class AdaBoost implements Classifier {
     // Constructor
     // PROVIDE GOOD DESCRIPTION HERE
     public AdaBoost(DataSet d, int rounds){
-	this.rounds = rounds;
+	    this.rounds = rounds;
 
     	// Assign number of weights from training examples
     	weights = new double[d.numTrainExs];
@@ -53,6 +53,15 @@ public class AdaBoost implements Classifier {
                 validatePrediction[i][j] = 
                 (stump.predict(d.trainEx[j]) == d.trainLabel[j]);
             }        
+        }
+
+        // Print validatePrediction
+        for (int i = 0; i < d.numAttrs; i++)
+        {
+            for (int j = 0; j < d.numTrainExs; j++)
+                System.out.print(validatePrediction[i][j] + " ");
+
+            System.out.println();
         }
 
     	// Initialize array for hypotheses
@@ -123,6 +132,7 @@ public class AdaBoost implements Classifier {
     	    else 
                 n += alpha[i];
     	}
+
     	return p > n ? P : N;
     }
 
@@ -153,7 +163,7 @@ public class AdaBoost implements Classifier {
 
         DataSet d = new DiscreteDataSet(filestem);
 
-        Classifier c = new DecisionTree(d);
+        Classifier c = new AdaBoost(d, 100);
 
         d.printTestPredictions(c, filestem);
     }

@@ -42,36 +42,37 @@ public class DecisionTree implements Classifier {
      *  by the data set and the desired root. 
      */
     public DecisionTree(DataSet d, int attr) {
-	this.d = d;
-	
-	Node node = new Node();
-	
-	// Set attribute for node
-	node.attr = attr;
-	
-	// Set children for the node
-	node.children = new Node[d.attrVals[attr].length];
-	
-	for (int i = 0; i < node.children.length; i++)
-	    {
-		Node child = new Node();
-		int p = 0;
-		int n = 0;
+		this.d = d;
 		
-		for (int e = 0; e < d.numTrainExs; e++) {
-		    if (d.trainEx[e][attr] == i) 
-			{
-			    if (d.trainLabel[e] == P) 
-				p++;
-			    else 
-				n++;
+		Node node = new Node();
+		
+		// Set attribute for node
+		node.attr = attr;
+		
+		// Set children for the node
+		node.children = new Node[d.attrVals[attr].length];
+		
+		for (int i = 0; i < node.children.length; i++)
+		{
+			Node child = new Node();
+			int p = 0;
+			int n = 0;
+			
+			for (int e = 0; e < d.numTrainExs; e++) {
+			    if (d.trainEx[e][attr] == i) 
+				{
+				    if (d.trainLabel[e] == P) 
+						p++;
+				    else 
+						n++;
+				}
 			}
+
+			child.classification = p > n ? P : N;
+			node.children[i] = child;
 		}
-		child.classification = p > n ? P : N;
-		node.children[i] = child;
-	    }
-	
-	root = node;
+		
+		root = node;
     }
     
     /* Recursively constructs a Decision Tree */
