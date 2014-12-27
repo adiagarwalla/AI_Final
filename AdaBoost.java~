@@ -1,127 +1,148 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.io.IOException;
+import java.io.FileReader;
 
 public class AdaBoost implements Classifier {
 	
-	// To be returned by the public methods for author and description
-	private String author = "Helen and Aditya";
-    private String description = "An adaBoost classifier using decision stump
-    							  as the weak learner";
-
+    // To be returned by the public methods for author and description
+    private String author = "Helen and Aditya";
+    private String description = "An adaBoost classifier using decision stump as the weak learner";
+    
     // An array of example weights
     private double[] weights;
 
-    // An array of all the hypotheses
-    private int[] hypotheses;
+    // An array of all the hypotheses in the form of decision stumps
+    private DecisionTree[] hypotheses;
 
     // An array of alphas
     private double[] alpha;
 
-    // Number of rounds - NO CLUE HOW TO DETERMINE IT AS OF NOW
-    private rounds;
+    // The two classifications
+    private final int P = 0;
+    private final int N = 1;
 
-    // Decision stump array instance variable
-    private DecisionTree[] stumps;
-
-    // Predictions for stump per attribute
-    boolean[][] validatePrediction;
+    // Number of rounds -- set through command line for systematic experiments
+    private int rounds;
 
     // Constructor
     // PROVIDE GOOD DESCRIPTION HERE
-    public AdaBoost(DataSet d)
-    {
+    public AdaBoost(DataSet d, int rounds){
+	this.rounds = rounds;
+	
     	// Assign number of weights from training examples
     	weights = new double[d.numTrainExs];
 
         // Initialize the weights to 1 / number of training examples
         for (int i = 0; i < d.numTrainExs; i++)
-            weights[i] = 1.0 / numTrainExs;
+            weights[i] = 1.0 / d.numTrainExs;
 
-        // Initialize weak learner decision stump array, one for each attribute
-        stumps = new DecisionTree[d.numAttrs];
-
-        validatePrediction = new boolean[d.numAttrs][d.numTrainExs];
+        // validatePrediction = new boolean[d.numAttrs][d.numTrainExs];
 
         // Get classification for each attribute
-        for (int i = 0; i < d.numAttrs; i++)
-        {
-            stumps[i] = new DecisionTree(d, i);
+        // for (int i = 0; i < d.numAttrs; i++)
+        // {
+        //     DecisionTree stump = new DecisionTree(d, i);
 
-            // Training examples that have wrong predictions for current
-            // attribute
-            for (int j = 0; j < d.numTrainExs; j++)
-            {
-                validatePrediction[i][j] = 
-                (stumps[i].predict(d.trainEx[j]) == d.trainLabel[j]);
-            }        
-        }
-
-    	// Assign value to number of rounds
-    	rounds = 100;
+        //     // Training examples that have wrong predictions for current
+        //     // attribute
+        //     for (int j = 0; j < d.numTrainExs; j++)
+        //     {
+        //         validatePrediction[i][j] = 
+        //         (stump.predict(d.trainEx[j]) == d.trainLabel[j]);
+        //     }        
+        // }
 
     	// Initialize array for hypotheses
-    	hypotheses = new int[rounds];
-
+    	hypotheses = new DecisionTree[rounds];
+	
     	// Initialize array for alpha
     	alpha = new double[rounds];
 
     	// Iterate the entire process for the number of rounds
     	for (int counter = 0; counter < rounds; counter++)
-    	{
-            double minError = Double.POSITIVE_INFINITY;
-            int minAttr = -1;
+        {
+      //       double minError = Double.POSITIVE_INFINITY;
+      //       int minAttr = -1;
 
-    		// Get minimum error
-            for (int i = 0; i < d.numAttrs; i++)
+    		// // Get minimum error
+      //       for (int i = 0; i < d.numAttrs; i++)
+      //       {
+      //           double currentError = 0.0;
+		
+      //           for (int j = 0; j < d.numTrainExs; j++)
+      //           {
+      //               if (!validatePrediction[i][j])
+      //                   currentError += weights[j];
+      //           }
+		
+      //           if (currentError < minError){
+      //   		    minError = currentError;
+      //   		    minAttr = i;
+      //   		}
+      //       }
+
+            List<Integer> examples = new ArrayList<Integer>();
+
+            for (int i = 0; i < d.numTrainExs; i++)
             {
-                double currentError = 0.0;
-
-                for (int j = 0; j < d.numTrainExs; j++)
-                {
-                    if (validatePrediction[i][j])
-                        currentError += 0;
-                    else
-                        currentError += weights[j];
-
-                    if (currentError < minError)
-                    {
-                        minError = currentError;
-                        minAttr = i;
-                    }
-                }
+                if (Math.random() <= weights[i])
+                    examples.add(i);
             }
-
+	    System.out.println(examples.size());
             // Set hypothesis for current iteration
-            hypotheses[counter] = minAttr;
+            hypotheses[counter] = new DecisionTree(d, examples, 3);
 
-            // Update alpha
-            alpha[counter] = 0.5 * Math.log((1 - minError) / minError);
+            double error = 0.0;
+
+            for (int i = 0; i < d.numTrainExs; i++)
+            {
+                if (hypotheses[counter].predict(d.trainEx[i]) == d.trainLabel[i])
+                    weights[i] *= error/(1 - error);
+                else
+                    error += weights[i];
+            }
 
             // Sum of weights for normalization
             double sumWeights = 0.0;
 
             // Update weights
-            for (int j = 0; j < numTrainExs; j++)
+            for (int j = 0; j < d.numTrainExs; j++)
             {
-                if (validatePrediction[minAttr][j])
-                    weights[j] *= Math.pow(Math.E, -alpha[counter]);
-                else
-                    weights[j] *= Math.pow(Math.E, alpha[counter]);
-
+		        // if (validatePrediction[minAttr][j])
+          //           weights[j] *= Math.pow(Math.E, -alpha[counter]);
+          //       else
+          //           weights[j] *= Math.pow(Math.E, alpha[counter]);
+		
                 // Calulate sum of weights for normalization
                 sumWeights += weights[j];
             }
 
             // Normalize
-            for (int j = 0; j < numTrainExs; j++)
+            for (int j = 0; j < d.numTrainExs; j++)
                 weights[j] /= sumWeights;
+
+            // Set alpha
+            alpha[counter] = Math.log((1 - error) / error);
     	}
     }
-
-     /** Prediction based on the decision tree generated by constructor */
+    
+    /** Prediction based on the decision tree generated by constructor */
     public int predict(int[] ex) {
-        // TO DO
+    	double p = 0;
+    	double n = 0;
+
+    	for (int i = 0; i < rounds; i++) 
+        {
+    	    if (hypotheses[i].predict(ex) == P) 
+                p += alpha[i];
+    	    else 
+                n += alpha[i];
+    	}
+
+    	return p > n ? P : N;
     }
 
     /** This method returns a description of the learning algorithm. */
@@ -132,5 +153,57 @@ public class AdaBoost implements Classifier {
     /** This method returns the author of this program. */
     public String author() {
         return author;
+    }
+
+    /** A simple main for testing this algorithm.  This main reads a
+     * filestem from the command line, runs the learning algorithm on
+     * this dataset, and prints the test predictions to filestem.testout.
+     */
+    public static void main(String argv[])
+    throws FileNotFoundException, IOException 
+    {
+        if (argv.length < 1) 
+        {
+            System.err.println("argument: filestem");
+            return;
+        }
+
+        String filestem = argv[0];
+
+        DataSet d = new DiscreteDataSet(filestem);
+
+        Classifier c = new AdaBoost(d, 500);
+
+        d.printTestPredictions(c, filestem);
+
+        // FileReader frTO = new FileReader(filestem+".testout");
+        // FileReader frAns = new FileReader(filestem+".answers");
+
+        // Scanner scannerTO = new Scanner(frTO);
+        // Scanner scannerAns = new Scanner(frAns);
+
+        // int skip = 0;
+
+        // while (skip < 4) {
+        
+        //     String line = scannerTO.nextLine();
+        //     skip++;
+        // }
+
+        // int error = 0;
+        // int numLines = 0;
+
+        // while (scannerTO.hasNextLine())
+        // {
+        //     String TO_Ans = scannerTO.nextLine();
+        //     String Ans = scannerAns.nextLine();
+
+        //     numLines++;
+
+        //     if (!TO_Ans.equals(Ans))
+        //         error++;
+        // }
+
+        // System.out.println("Error rate: " + (double)error/numLines);
     }
 }
