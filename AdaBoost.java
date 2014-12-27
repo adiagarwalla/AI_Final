@@ -1,6 +1,9 @@
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+import java.io.IOException;
+import java.io.FileReader;
 
 public class AdaBoost implements Classifier {
 	
@@ -56,13 +59,13 @@ public class AdaBoost implements Classifier {
         }
 
         // Print validatePrediction
-        for (int i = 0; i < d.numAttrs; i++)
-        {
-            for (int j = 0; j < d.numTrainExs; j++)
-                System.out.print(validatePrediction[i][j] + " ");
+        // for (int i = 0; i < d.numAttrs; i++)
+        // {
+        //     for (int j = 0; j < d.numTrainExs; j++)
+        //         System.out.print(validatePrediction[i][j] + " ");
 
-            System.out.println();
-        }
+        //     System.out.println();
+        // }
 
     	// Initialize array for hypotheses
     	hypotheses = new DecisionTree[rounds];
@@ -163,8 +166,38 @@ public class AdaBoost implements Classifier {
 
         DataSet d = new DiscreteDataSet(filestem);
 
-        Classifier c = new AdaBoost(d, 100);
+        Classifier c = new AdaBoost(d, 150);
 
         d.printTestPredictions(c, filestem);
+
+        FileReader frTO = new FileReader(filestem+".testout");
+        FileReader frAns = new FileReader(filestem+".answers");
+
+        Scanner scannerTO = new Scanner(frTO);
+        Scanner scannerAns = new Scanner(frAns);
+
+        int skip = 0;
+
+        while (skip < 4) {
+        
+            String line = scannerTO.nextLine();
+            skip++;
+        }
+
+        int error = 0;
+        int numLines = 0;
+
+        while (scannerTO.hasNextLine())
+        {
+            String TO_Ans = scannerTO.nextLine();
+            String Ans = scannerAns.nextLine();
+
+            numLines++;
+
+            if (!TO_Ans.equals(Ans))
+                error++;
+        }
+
+        //System.out.println("Error rate: " + (double)error/numLines);
     }
 }
