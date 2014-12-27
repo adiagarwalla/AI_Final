@@ -41,7 +41,8 @@ public class DecisionTree implements Classifier {
     /** A simple decision tree for use in AdaBoost. The stump is parameterized 
      *  by the examples set and the maximum height 
      */
-    public DecisionTree(List<Integer> examples, int height) {
+    public DecisionTree(DataSet d, List<Integer> examples, int height) {
+	this.d = d;
 	List<Integer> attributes = new ArrayList<Integer>();
 	for (int i = 0; i < d.numAttrs; i++) {
 	    attributes.add(i);
