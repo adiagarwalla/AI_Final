@@ -6,8 +6,7 @@ public class AdaBoost implements Classifier {
 	
     // To be returned by the public methods for author and description
     private String author = "Helen and Aditya";
-    private String description = "An adaBoost classifier using decision 
-                                                     stump as the weak learner";
+    private String description = "An adaBoost classifier using decision stump as the weak learner";
     
     // An array of example weights
     private double[] weights;
@@ -122,7 +121,7 @@ public class AdaBoost implements Classifier {
     	    if (hypotheses[i].predict(ex) == P) 
                 p += alpha[i];
     	    else 
-                n+= alpha[i];
+                n += alpha[i];
     	}
     	return p > n ? P : N;
     }
@@ -135,5 +134,27 @@ public class AdaBoost implements Classifier {
     /** This method returns the author of this program. */
     public String author() {
         return author;
+    }
+
+    /** A simple main for testing this algorithm.  This main reads a
+     * filestem from the command line, runs the learning algorithm on
+     * this dataset, and prints the test predictions to filestem.testout.
+     */
+    public static void main(String argv[])
+    throws FileNotFoundException, IOException 
+    {
+        if (argv.length < 1) 
+        {
+            System.err.println("argument: filestem");
+            return;
+        }
+
+        String filestem = argv[0];
+
+        DataSet d = new DiscreteDataSet(filestem);
+
+        Classifier c = new DecisionTree(d);
+
+        d.printTestPredictions(c, filestem);
     }
 }
