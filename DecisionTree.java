@@ -28,7 +28,7 @@ public class DecisionTree implements Classifier {
 	for (int i = 0; i < d.numAttrs; i++) {
 	    attributes.add(i);
 	}
-	root = DecisionTreeLearning(examples, attributes);
+	root = DecisionTreeLearning(examples, attributes, Integer.MAX_VALUE);
 	prune(root, validation);
 
 	/*	int error = 0;
@@ -39,45 +39,20 @@ public class DecisionTree implements Classifier {
     }
 
     /** A simple decision tree for use in AdaBoost. The stump is parameterized 
-     *  by the data set and the desired root. 
+     *  by the examples set and the maximum height 
      */
-    public DecisionTree(DataSet d, int attr) {
-		this.d = d;
-		
-		Node node = new Node();
-		
-		// Set attribute for node
-		node.attr = attr;
-		
-		// Set children for the node
-		node.children = new Node[d.attrVals[attr].length];
-		
-		for (int i = 0; i < node.children.length; i++)
-		{
-			Node child = new Node();
-			int p = 0;
-			int n = 0;
-			
-			for (int e = 0; e < d.numTrainExs; e++) {
-			    if (d.trainEx[e][attr] == i) 
-				{
-				    if (d.trainLabel[e] == P) 
-						p++;
-				    else 
-						n++;
-				}
-			}
+    public DecisionTree(List<Integer> examples, int height) {
+	List<Integer> attributes = new ArrayList<Integer>();
+	for (int i = 0; i < d.numAttrs; i++) {
+	    attributes.add(i);
+	}
 
-			child.classification = p > n ? P : N;
-			node.children[i] = child;
-		}
-		
-		root = node;
+	root = DecisionTreeLearning(examples, attributes, height);
     }
     
     /* Recursively constructs a Decision Tree */
     private Node DecisionTreeLearning(List<Integer> examples, 
-				      List<Integer> attributes) {
+				      List<Integer> attributes, int height) {
 	if (examples.size() == 0) return null;
 	
 	Node node = new Node();
@@ -89,34 +64,39 @@ public class DecisionTree implements Classifier {
 	}
 	//  classification based on plurality
 	node.classification = p > n? P: N;
-	// continue if not all examples have same classification and attributes != empty
-	if (!(p == 0 || n == 0 || attributes.size() == 0)) {
-	    //  decide which attribute to split on
-	    double maxGain = Double.NEGATIVE_INFINITY;
-	    int attr = -1;
-	    for (int i: attributes) {
-		double temp = infoGain(i, examples);
-		//System.out.println("Attribute " + d.attrName[i] + ": " + temp);
-		if (temp > maxGain) {
-		    maxGain = temp;
+	
+	//  if all examples belong to the same classification
+	//  or there are no attributes left to split on
+	//  or the remaining height limit is 0
+	//  return without branching
+	if (p == 0 || n == 0 || attributes.size() == 0 || height == 0) return node;
+	
+	//  decide which attribute to split on
+	double maxGain = Double.NEGATIVE_INFINITY;
+	int attr = -1;
+	for (int i: attributes) {
+	    double temp = infoGain(i, examples);
+	    //System.out.println("Attribute " + d.attrName[i] + ": " + temp);
+	    if (temp > maxGain) {
+		maxGain = temp;
 		    attr = i;
-		}
-	    }
-	    //System.out.println("Splitting on " + d.attrName[attr]);
-	    node.attr = attr;
-	    node.children = new Node[d.attrVals[attr].length];
-	    
-	    //  calculate subtrees
-	    attributes.remove((Integer) attr);
-	    for (int i = 0; i < node.children.length; i++) {
-		//  new subset of examples
-		List<Integer> newExamples = new ArrayList<Integer>();
-		for (int e: examples) {
-		    if (d.trainEx[e][attr] == i) newExamples.add(e);
-		}
-		node.children[i] = DecisionTreeLearning(newExamples, attributes);
 	    }
 	}
+	//System.out.println("Splitting on " + d.attrName[attr]);
+	node.attr = attr;
+	node.children = new Node[d.attrVals[attr].length];
+	
+	//  calculate subtrees
+	attributes.remove((Integer) attr);
+	for (int i = 0; i < node.children.length; i++) {
+	    //  new subset of examples
+	    List<Integer> newExamples = new ArrayList<Integer>();
+	    for (int e: examples) {
+		if (d.trainEx[e][attr] == i) newExamples.add(e);
+	    }
+	    node.children[i] = DecisionTreeLearning(newExamples, attributes, height-1);
+	}
+	
 	return node;
     }
 
