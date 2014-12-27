@@ -49,32 +49,38 @@ public class AdaBoost implements Classifier {
     	for (int counter = 0; counter < rounds; counter++)
         {
 
-	    //  randomly sample numTrainExs times based on weights of example
+	        // Randomly sample numTrainExs times based on weights of example
             List<Integer> examples = new ArrayList<Integer>();
-	    for (int j = 0; j < d.numTrainExs; j++) {
-		for (int i = 0; i < d.numTrainExs; i++)
-		    {
-			if (Math.random() <= weights[i])
-			    examples.add(i);
-		    }
-	    }
+	    
+            for (int j = 0; j < d.numTrainExs; j++) 
+            {
+                for (int i = 0; i < d.numTrainExs; i++)
+		        {
+                    if (Math.random() <= weights[i])
+                        examples.add(i);
+		        }
+	        }
 	    
             // Set hypothesis for current iteration
             hypotheses[counter] = new DecisionTree(d, examples, 3);
 
             double error = 0.0;
 
-            for (int i = 0; i < d.numTrainExs; i++){
+            for (int i = 0; i < d.numTrainExs; i++)
+            {
                 if (hypotheses[counter].predict(d.trainEx[i]) != d.trainLabel[i])
                     error += weights[i];
             }
 	    
-	    double sumWeights = 0.0;
-            for (int i = 0; i < d.numTrainExs; i++){
-		if (hypotheses[counter].predict(d.trainEx[i]) == d.trainLabel[i])
-		    weights[i] *= error/(1 - error);
-		sumWeights += weights[i];
-	    }
+    	    double sumWeights = 0.0;
+                
+            for (int i = 0; i < d.numTrainExs; i++)
+            {
+    		    if (hypotheses[counter].predict(d.trainEx[i]) == d.trainLabel[i])
+                    weights[i] *= error/(1 - error);
+    		
+                sumWeights += weights[i];
+	        }
 
             // Normalize
             for (int j = 0; j < d.numTrainExs; j++)
@@ -131,36 +137,36 @@ public class AdaBoost implements Classifier {
         Classifier c = new AdaBoost(d, 500);
 
         d.printTestPredictions(c, filestem);
-	/*
-         FileReader frTO = new FileReader(filestem+".testout");
-         FileReader frAns = new FileReader(filestem+".answers");
+	
+         // FileReader frTO = new FileReader(filestem+".testout");
+         // FileReader frAns = new FileReader(filestem+".answers");
 
-         Scanner scannerTO = new Scanner(frTO);
-         Scanner scannerAns = new Scanner(frAns);
+         // Scanner scannerTO = new Scanner(frTO);
+         // Scanner scannerAns = new Scanner(frAns);
 
-         int skip = 0;
+         // int skip = 0;
 
-         while (skip < 4) {
+         // while (skip < 4) {
         
-             String line = scannerTO.nextLine();
-             skip++;
-         }
+         //     String line = scannerTO.nextLine();
+         //     skip++;
+         // }
 
-         int error = 0;
-         int numLines = 0;
+         // int error = 0;
+         // int numLines = 0;
 
-         while (scannerTO.hasNextLine())
-         {
-             String TO_Ans = scannerTO.nextLine();
-             String Ans = scannerAns.nextLine();
+         // while (scannerTO.hasNextLine())
+         // {
+         //     String TO_Ans = scannerTO.nextLine();
+         //     String Ans = scannerAns.nextLine();
 
-             numLines++;
+         //     numLines++;
 
-             if (!TO_Ans.equals(Ans))
-                 error++;
-         }
+         //     if (!TO_Ans.equals(Ans))
+         //         error++;
+         // }
 
-         System.out.println("Error rate: " + (double)error/numLines);
-	*/ 
+         // System.out.println("Error rate: " + (double)error/numLines);
+	 
     }
 }

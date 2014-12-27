@@ -1,6 +1,6 @@
 Helen and Aditya
 .
-An adaBoost classifier using decision stump as the weak learner
+An adaBoost classifier using decision tree (max height 3) as the weak learner
 .
 7
 7
@@ -368,7 +368,7 @@ An adaBoost classifier using decision stump as the weak learner
 7
 7
 1
-1
+7
 1
 7
 1
@@ -385,7 +385,7 @@ An adaBoost classifier using decision stump as the weak learner
 1
 7
 1
-1
+7
 7
 7
 1
@@ -485,7 +485,7 @@ An adaBoost classifier using decision stump as the weak learner
 7
 7
 7
-1
+7
 7
 1
 7
@@ -949,7 +949,7 @@ An adaBoost classifier using decision stump as the weak learner
 1
 7
 1
-1
+7
 7
 7
 1
@@ -1020,7 +1020,7 @@ An adaBoost classifier using decision stump as the weak learner
 1
 1
 7
-1
+7
 1
 7
 1
@@ -1138,7 +1138,7 @@ An adaBoost classifier using decision stump as the weak learner
 1
 1
 1
-7
+1
 1
 7
 1
@@ -1213,7 +1213,7 @@ An adaBoost classifier using decision stump as the weak learner
 7
 7
 7
-7
+1
 1
 1
 1
@@ -1262,7 +1262,7 @@ An adaBoost classifier using decision stump as the weak learner
 1
 7
 7
-1
+7
 1
 1
 1
@@ -1301,7 +1301,7 @@ An adaBoost classifier using decision stump as the weak learner
 7
 7
 7
-1
+7
 1
 7
 7
@@ -1775,7 +1775,7 @@ An adaBoost classifier using decision stump as the weak learner
 1
 7
 1
-7
+1
 7
 1
 1
@@ -1894,7 +1894,7 @@ An adaBoost classifier using decision stump as the weak learner
 7
 1
 1
-7
+1
 7
 7
 1
@@ -2143,7 +2143,7 @@ An adaBoost classifier using decision stump as the weak learner
 7
 1
 7
-7
+1
 1
 1
 1
@@ -2205,7 +2205,7 @@ An adaBoost classifier using decision stump as the weak learner
 1
 1
 7
-7
+1
 1
 7
 7
@@ -2312,7 +2312,7 @@ An adaBoost classifier using decision stump as the weak learner
 1
 1
 1
-7
+1
 7
 7
 7
@@ -2329,7 +2329,7 @@ An adaBoost classifier using decision stump as the weak learner
 1
 7
 7
-1
+7
 1
 1
 1
@@ -2537,7 +2537,7 @@ An adaBoost classifier using decision stump as the weak learner
 7
 1
 7
-1
+7
 1
 7
 7
@@ -2558,7 +2558,7 @@ An adaBoost classifier using decision stump as the weak learner
 1
 1
 7
-7
+1
 7
 7
 7
@@ -2587,7 +2587,7 @@ An adaBoost classifier using decision stump as the weak learner
 7
 7
 7
-7
+1
 7
 1
 7
@@ -2765,7 +2765,7 @@ An adaBoost classifier using decision stump as the weak learner
 1
 1
 1
-1
+7
 7
 1
 7
@@ -2818,7 +2818,7 @@ An adaBoost classifier using decision stump as the weak learner
 7
 1
 1
-7
+1
 1
 1
 1
@@ -2863,7 +2863,7 @@ An adaBoost classifier using decision stump as the weak learner
 1
 7
 7
-1
+7
 1
 1
 1
@@ -2893,7 +2893,7 @@ An adaBoost classifier using decision stump as the weak learner
 7
 1
 7
-7
+1
 7
 1
 7
@@ -3075,7 +3075,7 @@ An adaBoost classifier using decision stump as the weak learner
 1
 1
 7
-7
+1
 1
 1
 1
@@ -3153,7 +3153,7 @@ An adaBoost classifier using decision stump as the weak learner
 7
 7
 7
-1
+7
 7
 1
 7
@@ -3206,16 +3206,16 @@ An adaBoost classifier using decision stump as the weak learner
 1
 1
 7
-1
 7
 7
 7
 7
-1
 7
 1
+7
 1
 1
+7
 7
 7
 7
@@ -3315,7 +3315,7 @@ An adaBoost classifier using decision stump as the weak learner
 1
 7
 1
-1
+7
 7
 1
 7
@@ -3388,7 +3388,7 @@ An adaBoost classifier using decision stump as the weak learner
 1
 7
 1
-1
+7
 1
 7
 7
@@ -3505,7 +3505,7 @@ An adaBoost classifier using decision stump as the weak learner
 1
 1
 7
-1
+7
 1
 1
 7
@@ -3554,7 +3554,7 @@ An adaBoost classifier using decision stump as the weak learner
 1
 1
 1
-1
+7
 1
 1
 7
@@ -3627,7 +3627,7 @@ An adaBoost classifier using decision stump as the weak learner
 7
 1
 7
-7
+1
 1
 7
 7
@@ -3869,7 +3869,7 @@ An adaBoost classifier using decision stump as the weak learner
 7
 7
 1
-1
+7
 7
 7
 7

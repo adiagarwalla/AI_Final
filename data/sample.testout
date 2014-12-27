@@ -1,6 +1,6 @@
 Helen and Aditya
 .
-An adaBoost classifier using decision stump as the weak learner
+An adaBoost classifier using decision tree (max height 3) as the weak learner
 .
 -
 -

@@ -15,21 +15,21 @@ public class DecisionTree implements Classifier {
 
     /** Constructs a decision tree */
     public DecisionTree(DataSet d) {
-	this.d = d;
-	double alpha = .2; // fraction of training set reserved for pruning validation
-	List<Integer> examples = new ArrayList<Integer>();
-	// part of training set reserved for pruning validation
-	List<Integer> validation = new ArrayList<Integer>(); 
-	List<Integer> attributes = new ArrayList<Integer>();
-	for (int i = 0; i < d.numTrainExs; i++) {
-	    if (Math.random() < alpha) validation.add(i);
-	    else examples.add(i);
-	}
-	for (int i = 0; i < d.numAttrs; i++) {
-	    attributes.add(i);
-	}
-	root = DecisionTreeLearning(examples, attributes, Integer.MAX_VALUE);
-	prune(root, validation);
+		this.d = d;
+		double alpha = .2; // fraction of training set reserved for pruning validation
+		List<Integer> examples = new ArrayList<Integer>();
+		// part of training set reserved for pruning validation
+		List<Integer> validation = new ArrayList<Integer>(); 
+		List<Integer> attributes = new ArrayList<Integer>();
+		for (int i = 0; i < d.numTrainExs; i++) {
+		    if (Math.random() < alpha) validation.add(i);
+		    else examples.add(i);
+		}
+		for (int i = 0; i < d.numAttrs; i++) {
+		    attributes.add(i);
+		}
+		root = DecisionTreeLearning(examples, attributes, Integer.MAX_VALUE);
+		prune(root, validation);
 
 	/*	int error = 0;
 	for (int i = d.numTrainExs/2; i < d.numTrainExs; i++) {
@@ -42,13 +42,13 @@ public class DecisionTree implements Classifier {
      *  by the examples set and the maximum height 
      */
     public DecisionTree(DataSet d, List<Integer> examples, int height) {
-	this.d = d;
-	List<Integer> attributes = new ArrayList<Integer>();
-	for (int i = 0; i < d.numAttrs; i++) {
-	    attributes.add(i);
-	}
+		this.d = d;
+		List<Integer> attributes = new ArrayList<Integer>();
+		for (int i = 0; i < d.numAttrs; i++) {
+		    attributes.add(i);
+		}
 
-	root = DecisionTreeLearning(examples, attributes, height);
+		root = DecisionTreeLearning(examples, attributes, height);
     }
     
     /* Recursively constructs a Decision Tree */
