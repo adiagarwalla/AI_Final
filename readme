@@ -51,4 +51,4 @@ numTrainExs times. We then pass this example set as a parameter to the height
 limited decision tree, which serves as our weak hypothesis.
 
 Finally, the public method predict() takes a weighted vote among each of the 
-hypotheses (using the DecisionTree predict() method)
+hypotheses (using the DecisionTree predict() method).

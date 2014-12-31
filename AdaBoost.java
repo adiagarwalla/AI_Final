@@ -1,15 +1,12 @@
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
-import java.io.IOException;
-import java.io.FileReader;
+import java.util.*;
 
 public class AdaBoost implements Classifier {
 	
     // To be returned by the public methods for author and description
     private String author = "Helen and Aditya";
-    private String description = "An adaBoost classifier using decision tree (max height 3) as the weak learner";
+    private String description = "An adaBoost classifier using decision tree " +
+                                 "(max height 3) as the weak learner";
     
     // An array of example weights
     private double[] weights;
@@ -18,18 +15,23 @@ public class AdaBoost implements Classifier {
     // limited
     private DecisionTree[] hypotheses;
 
-    // An array of alphas
+    // An array of alphas or weights of hypotheses
     private double[] alpha;
 
     // The two classifications
     private final int P = 0;
     private final int N = 1;
 
-    // Number of rounds -- set through command line for systematic experiments
+    // Number of rounds -- for testing and systematic experiments
     private int rounds;
 
-    // Constructor
-    // PROVIDE GOOD DESCRIPTION HERE
+    // Constructor that takes a DataSet and rounds as parameters. This 
+    // is where the AdaBoost algorithm is implemented. The algorithm is 
+    // implemented as per Figure 18.36 of R&N (Page 751) with only one addition 
+    // to accommodate decision trees as the weak learner - randomly sampling 
+    // numTrainExs times based on weights of example. This is then added to the 
+    // ArrayList examples that is passed as a parameter to the height limited 
+    // decision tree.
     public AdaBoost(DataSet d, int rounds){
 	
         this.rounds = rounds;
@@ -50,7 +52,6 @@ public class AdaBoost implements Classifier {
     	// Iterate the entire process for the number of rounds
     	for (int counter = 0; counter < rounds; counter++)
         {
-
 	        // Randomly sample numTrainExs times based on weights of example
             List<Integer> examples = new ArrayList<Integer>();
 	    
@@ -66,19 +67,24 @@ public class AdaBoost implements Classifier {
             // Set hypothesis for current iteration
             hypotheses[counter] = new DecisionTree(d, examples, 3);
 
+            // Initialize error for this round
             double error = 0.0;
 
+            // Increment error accordingly if there is a mismatch of labels
+            // in reality and in prediction
             for (int i = 0; i < d.numTrainExs; i++)
             {
-                if (hypotheses[counter].predict(d.trainEx[i]) != d.trainLabel[i])
+                if(hypotheses[counter].predict(d.trainEx[i]) != d.trainLabel[i])
                     error += weights[i];
             }
 	    
+            // Sum of weights for normalizing later
     	    double sumWeights = 0.0;
                 
+            // Update weights if labels in reality and prediction are equal
             for (int i = 0; i < d.numTrainExs; i++)
             {
-    		    if (hypotheses[counter].predict(d.trainEx[i]) == d.trainLabel[i])
+    		    if(hypotheses[counter].predict(d.trainEx[i]) == d.trainLabel[i])
                     weights[i] *= error/(1 - error);
     		
                 sumWeights += weights[i];
@@ -98,6 +104,8 @@ public class AdaBoost implements Classifier {
     	double p = 0;
     	double n = 0;
 
+        // Incremement p or n depending on which classification the prediction
+        // equals
     	for (int i = 0; i < rounds; i++) 
         {
     	    if (hypotheses[i].predict(ex) == P) 
@@ -106,6 +114,7 @@ public class AdaBoost implements Classifier {
                 n += alpha[i];
     	}
 
+        // Return based on whether p or n is greater
     	return p > n ? P : N;
     }
 
@@ -123,8 +132,8 @@ public class AdaBoost implements Classifier {
      * filestem from the command line, runs the learning algorithm on
      * this dataset, and prints the test predictions to filestem.testout.
      */
-    public static void main(String argv[])
-    throws FileNotFoundException, IOException 
+    public static void main(String argv[]) throws FileNotFoundException, 
+                                                  IOException 
     {
         if (argv.length < 1) 
         {
@@ -133,42 +142,11 @@ public class AdaBoost implements Classifier {
         }
 
         String filestem = argv[0];
-
+ 
         DataSet d = new DiscreteDataSet(filestem);
-
+ 
         Classifier c = new AdaBoost(d, 500);
-
+ 
         d.printTestPredictions(c, filestem);
-	
-         // FileReader frTO = new FileReader(filestem+".testout");
-         // FileReader frAns = new FileReader(filestem+".answers");
-
-         // Scanner scannerTO = new Scanner(frTO);
-         // Scanner scannerAns = new Scanner(frAns);
-
-         // int skip = 0;
-
-         // while (skip < 4) {
-        
-         //     String line = scannerTO.nextLine();
-         //     skip++;
-         // }
-
-         // int error = 0;
-         // int numLines = 0;
-
-         // while (scannerTO.hasNextLine())
-         // {
-         //     String TO_Ans = scannerTO.nextLine();
-         //     String Ans = scannerAns.nextLine();
-
-         //     numLines++;
-
-         //     if (!TO_Ans.equals(Ans))
-         //         error++;
-         // }
-
-         // System.out.println("Error rate: " + (double)error/numLines);
-	 
     }
 }

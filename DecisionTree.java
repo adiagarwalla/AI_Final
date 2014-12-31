@@ -17,7 +17,7 @@ public class DecisionTree implements Classifier {
     /** Constructs a decision tree */
     public DecisionTree(DataSet d) {
 	this.d = d;
-	double alpha = .2; // fraction of training set reserved for pruning validation
+	double alpha = .2;//fraction of training set reserved for pruning validation
 	List<Integer> examples = new ArrayList<Integer>();
 	// part of training set reserved for pruning validation
 	List<Integer> validation = new ArrayList<Integer>(); 
@@ -90,7 +90,7 @@ public class DecisionTree implements Classifier {
 	    for (int e: examples) {
 		if (d.trainEx[e][attr] == i) newExamples.add(e);
 	    }
-	    node.children[i] = DecisionTreeLearning(newExamples, attributes, height-1);
+	    node.children[i]=DecisionTreeLearning(newExamples, attributes,height-1);
 	}
 	
 	return node;
@@ -118,7 +118,7 @@ public class DecisionTree implements Classifier {
 	    }
 
 	    if (pk + nk != 0)
-		remainder += ((double) (pk + nk)/(p + n)) * entropy((double)pk/(pk + nk)); 
+		remainder += ((double) (pk + nk)/(p + n))*entropy((double)pk/(pk + nk)); 
 	}
 	return entropy((double)p/(p+n)) - remainder;
     }
