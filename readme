@@ -44,10 +44,11 @@ experiment.
 
 AdaBoost has a constructor that takes a DataSet and rounds as parameters. This 
 is where the AdaBoost algorithm is implemented. The algorithm is implemented
-as per Figure 18.36 of R&N (Page 751) with only one addition to accommodate
-decision trees as the weak learner - randomly sampling numTrainExs times based 
-on weights of example. This is then added to the ArrayList examples that is
-passed as a parameter to the height limited decision tree.
+as per Figure 18.36 of R&N (Page 751). Each round, to generate a hypothesis, 
+we create a set of examples by randomly sampling the examples and choosing each 
+example with with probability weight[example]. We repeat this sampling 
+numTrainExs times. We then pass this example set as a parameter to the height 
+limited decision tree, which serves as our weak hypothesis.
 
-Finally, the public method predict() predicts the classification based on the
-decision tree predict method().
+Finally, the public method predict() takes a weighted vote among each of the 
+hypotheses (using the DecisionTree predict() method)
