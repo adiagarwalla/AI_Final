@@ -14,7 +14,8 @@ public class AdaBoost implements Classifier {
     // An array of example weights
     private double[] weights;
 
-    // An array of all the hypotheses in the form of decision stumps
+    // An array of all the hypotheses in the form of decision trees with height
+    // limited
     private DecisionTree[] hypotheses;
 
     // An array of alphas
@@ -30,7 +31,8 @@ public class AdaBoost implements Classifier {
     // Constructor
     // PROVIDE GOOD DESCRIPTION HERE
     public AdaBoost(DataSet d, int rounds){
-	this.rounds = rounds;
+	
+        this.rounds = rounds;
 	
     	// Assign number of weights from training examples
     	weights = new double[d.numTrainExs];

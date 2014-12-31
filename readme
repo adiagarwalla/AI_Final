@@ -1,7 +1,53 @@
-DecisionTree.java has 2 constructors, one for use in constructing a full decision tree and one for use in constructing a height limited decision tree for use in AdaBoost. The full decision tree takes a DataSet as a parameter, and saves (1-alpha) of training examples for use in constructing the tree, and reserves alpha of the training examples for validation purposes in pruning. The height limited tree stops constructing the tree after it reaches a certain height, and also does not prune.
+Helen Yu (heleny) and Aditya Agarwalla (aa4)
 
-DecisionTree makes use of a helper class, Node.java. Each node consists of a classification, an attribute, and an array of subtrees called children. A DecisionTree merely consists a Node root. DecisionTree.predict() works by following the appropriate child links from the root all the way until it reaches a leaf Node, and returning the last classification found on the path. 
+DecisionTree.java has 2 constructors, one for use in constructing a full 
+decision tree and one for use in constructing a height limited decision tree 
+for use in AdaBoost. The full decision tree takes a DataSet as a parameter, and 
+saves (1-alpha) of training examples for use in constructing the tree, and 
+reserves alpha of the training examples for validation purposes in pruning. The 
+height limited tree stops constructing the tree after it reaches a certain 
+height, and also does not prune.
 
-Both DecisionTree constructors call a recursive helper method called DecisionTreeLearning(List<Integer> examples, List<Integer> attributes, int height), which returns a Node. Examples is the list of examples to consider when building the tree, attributes is the list of possible attributes to split on, and height is the maximum height that the tree can have. DecisionTreeLearning decides which attribute to split on based on the information gain (which is calculated by a helper method called infoGain()). It classifies each node based on plurality. If all children have the same classification, or there are no more attributes to split on, or the maximum height of the tree has been reached, then the algorithm terminates. Otherwise, DecisionTreeLearning is called recursively to construct the children of the node. 
+DecisionTree makes use of a helper class, Node.java. Each node consists of a 
+classification, an attribute, and an array of subtrees called children. A 
+DecisionTree merely consists a Node root. DecisionTree.predict() works by 
+following the appropriate child links from the root all the way until it reaches
+ a leaf Node, and returning the last classification found on the path. 
 
-To prune our tree, we have a recursive helper method called prune(Node node, List<Integer> validation) which takes the Node to possibly prune, as well as a list of examples used for validation purposes. We calculate the error e in the validation set without pruning, as well as the error e' in the validation set with pruning, and prune if e' <= e. If we do not prune node, then we call prune() on node's children. 
+Both DecisionTree constructors call a recursive helper method called 
+DecisionTreeLearning(List<Integer> examples, List<Integer> attributes, 
+int height), which returns a Node. Examples is the list of examples to consider 
+when building the tree, attributes is the list of possible attributes to split 
+on, and height is the maximum height that the tree can have. 
+DecisionTreeLearning decides which attribute to split on based on the 
+information gain (which is calculated by a helper method called infoGain()). It 
+classifies each node based on plurality. If all children have the same 
+classification, or there are no more attributes to split on, or the maximum 
+height of the tree has been reached, then the algorithm terminates. Otherwise, 
+DecisionTreeLearning is called recursively to construct the children of the 
+node. 
+
+To prune our tree, we have a recursive helper method called prune(Node node, 
+List<Integer> validation) which takes the Node to possibly prune, as well as a 
+list of examples used for validation purposes. We calculate the error e in the 
+validation set without pruning, as well as the error e' in the validation set 
+with pruning, and prune if e' <= e. If we do not prune node, then we call 
+prune() on node's children. 
+
+AdaBoost.java has the following instance variables - author and description for 
+the public methods (algorithmDescription() and author()), a double array for
+weights, an array of decision trees that represent the hypotheses, an array of
+alphas or hypotheses weights(or z as per the book algorithm), P and N 
+representing the binary classification in the data which is uniform throughout 
+the code and finally, a rounds variable for testing and the systematic 
+experiment.
+
+AdaBoost has a constructor that takes a DataSet and rounds as parameters. This 
+is where the AdaBoost algorithm is implemented. The algorithm is implemented
+as per Figure 18.36 of R&N (Page 751) with only one addition to accommodate
+decision trees as the weak learner - randomly sampling numTrainExs times based 
+on weights of example. This is then added to the ArrayList examples that is
+passed as a parameter to the height limited decision tree.
+
+Finally, the public method predict() predicts the classification based on the
+decision tree predict method().
