@@ -6,8 +6,9 @@ import java.lang.Math;
 public class DecisionTree implements Classifier {
 
     private DataSet d;
-    private int P = 0; //  positive label
-    private int N = 1; //  negative label
+    // the two classifications
+    private int P = 0; 
+    private int N = 1; 
     private String author = "Helen and Aditya";
     private String description = "A decision tree classifier";
     // The root of the decision tree. See Node class for more details
@@ -15,40 +16,34 @@ public class DecisionTree implements Classifier {
 
     /** Constructs a decision tree */
     public DecisionTree(DataSet d) {
-		this.d = d;
-		double alpha = .2; // fraction of training set reserved for pruning validation
-		List<Integer> examples = new ArrayList<Integer>();
-		// part of training set reserved for pruning validation
-		List<Integer> validation = new ArrayList<Integer>(); 
-		List<Integer> attributes = new ArrayList<Integer>();
-		for (int i = 0; i < d.numTrainExs; i++) {
-		    if (Math.random() < alpha) validation.add(i);
-		    else examples.add(i);
-		}
-		for (int i = 0; i < d.numAttrs; i++) {
-		    attributes.add(i);
-		}
-		root = DecisionTreeLearning(examples, attributes, Integer.MAX_VALUE);
-		prune(root, validation);
-
-	/*	int error = 0;
-	for (int i = d.numTrainExs/2; i < d.numTrainExs; i++) {
-	    if (predict(d.trainEx[i]) != d.trainLabel[i]) error++;
+	this.d = d;
+	double alpha = .2; // fraction of training set reserved for pruning validation
+	List<Integer> examples = new ArrayList<Integer>();
+	// part of training set reserved for pruning validation
+	List<Integer> validation = new ArrayList<Integer>(); 
+	List<Integer> attributes = new ArrayList<Integer>();
+	for (int i = 0; i < d.numTrainExs; i++) {
+	    if (Math.random() < alpha) validation.add(i);
+	    else examples.add(i);
 	}
-	System.out.println((double)error/(d.numTrainExs/2));*/
+	for (int i = 0; i < d.numAttrs; i++) {
+	    attributes.add(i);
+	}
+	root = DecisionTreeLearning(examples, attributes, Integer.MAX_VALUE);
+	prune(root, validation);
     }
 
     /** A simple decision tree for use in AdaBoost. The stump is parameterized 
      *  by the examples set and the maximum height 
      */
     public DecisionTree(DataSet d, List<Integer> examples, int height) {
-		this.d = d;
-		List<Integer> attributes = new ArrayList<Integer>();
-		for (int i = 0; i < d.numAttrs; i++) {
-		    attributes.add(i);
-		}
-
-		root = DecisionTreeLearning(examples, attributes, height);
+	this.d = d;
+	List<Integer> attributes = new ArrayList<Integer>();
+	for (int i = 0; i < d.numAttrs; i++) {
+	    attributes.add(i);
+	}
+	
+	root = DecisionTreeLearning(examples, attributes, height);
     }
     
     /* Recursively constructs a Decision Tree */
