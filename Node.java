@@ -1,3 +1,8 @@
+/** 
+ * Helen Yu (heleny)
+ * Aditya Agarwalla (aa4)
+ */
+
 public class Node {
 
     // The attribute that the tree is splitting on. if -1, no attribute
