@@ -30,14 +30,14 @@ public class AdaBoost implements Classifier {
     // Number of rounds -- for testing and systematic experiments
     private int rounds;
 
-    // Constructor that takes a DataSet and rounds as parameters. This 
-    // is where the AdaBoost algorithm is implemented. The algorithm is 
+    // Constructor that takes a DataSet, rounds, and tree height as parameters. 
+    // This is where the AdaBoost algorithm is implemented. The algorithm is 
     // implemented as per Figure 18.36 of R&N (Page 751) with only one addition 
     // to accommodate decision trees as the weak learner - randomly sampling 
     // numTrainExs times based on weights of example. This is then added to the 
     // ArrayList examples that is passed as a parameter to the height limited 
     // decision tree.
-    public AdaBoost(DataSet d, int rounds){
+    public AdaBoost(DataSet d, int rounds, int height){
 	
         this.rounds = rounds;
 	
@@ -70,7 +70,7 @@ public class AdaBoost implements Classifier {
 	        }
 	    
             // Set hypothesis for current iteration
-            hypotheses[counter] = new DecisionTree(d, examples, 3);
+            hypotheses[counter] = new DecisionTree(d, examples, height);
 
             // Initialize error for this round
             double error = 0.0;
@@ -150,7 +150,7 @@ public class AdaBoost implements Classifier {
  
         DataSet d = new DiscreteDataSet(filestem);
  
-        Classifier c = new AdaBoost(d, 500);
+        Classifier c = new AdaBoost(d, 500, 3);
  
         d.printTestPredictions(c, filestem);
     }

@@ -6,18 +6,18 @@
 import java.io.*;
 import java.util.*;
 
-public class RoundsExperiment {
+public class HeightExperiment {
 
-    // Main method for systematic experiment for AdaBoost rounds testing
+    // Main method for systematic experiment for AdaBoost decision tree height
     // Requires four arguments to run
-    // E.g.java RoundsExperiment data/dna_500 data/census_1000 data/ocr17_1000 
+    // E.g.java HeightExperiment data/dna_500 data/census_1000 data/ocr17_1000 
     // data/ocr49_1000
     public static void main(String argv[]) throws FileNotFoundException, 
                                                   IOException
     {
         if (argv.length < 4) 
         {
-            System.out.println("RoundsExperiment file1 file2 file3 file4"); 
+            System.out.println("HeightExperiment file1 file2 file3 file4"); 
             return;
         }
 
@@ -32,9 +32,10 @@ public class RoundsExperiment {
 
         for (int i = 0; i < 4; i++)
         {
+	    int rounds = 150;
             System.out.println("DataSet is: " + filestem[i]);
 
-            for (int rounds = 100; rounds <= 2000; rounds += 100)
+            for (int height = 1; height <= 6; height++)
             {
                 // Sum of errors across all trials
                 double sumError = 0.0;
@@ -44,7 +45,7 @@ public class RoundsExperiment {
 
                 for (trial = 0; trial < 10; trial++)
                 {
-                    Classifier c = new AdaBoost(d[i], rounds, 3);
+                    Classifier c = new AdaBoost(d[i], rounds, height);
 
                     d[i].printTestPredictions(c, filestem[i]);
         	
@@ -79,7 +80,7 @@ public class RoundsExperiment {
                 }
 
                 System.out.println("Error rate average over " + trial + 
-                   " trials " + "for " + rounds + " rounds: " + sumError/trial);
+                   " trials " + "for " + height + " height tree: " + sumError/trial);
             }
         }
     }
