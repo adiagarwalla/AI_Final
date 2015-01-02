@@ -42,13 +42,14 @@ representing the binary classification in the data which is uniform throughout
 the code and finally, a rounds variable for testing and the systematic 
 experiment.
 
-AdaBoost has a constructor that takes a DataSet and rounds as parameters. This 
-is where the AdaBoost algorithm is implemented. The algorithm is implemented
-as per Figure 18.36 of R&N (Page 751). Each round, to generate a hypothesis, 
-we create a set of examples by randomly sampling the examples and choosing each 
-example with with probability weight[example]. We repeat this sampling 
-numTrainExs times. We then pass this example set as a parameter to the height 
-limited decision tree, which serves as our weak hypothesis.
+AdaBoost has a constructor that takes a DataSet, number of rounds, and decision
+tree height as parameters. This is where the AdaBoost algorithm is implemented. 
+The algorithm is implemented as per Figure 18.36 of R&N (Page 751). Each round, 
+to generate a hypothesis, we create a set of examples by randomly sampling the 
+examples and choosing each example with with probability weight[example]. We 
+repeat this sampling numTrainExs times. We then pass this example set as a 
+parameter to the height limited decision tree, which serves as our weak 
+hypothesis.
 
 Finally, the public method predict() takes a weighted vote among each of the 
 hypotheses (using the DecisionTree predict() method).
@@ -56,10 +57,14 @@ hypotheses (using the DecisionTree predict() method).
 
 -------------
 
-To run sysematic experiment for AdaBoost rounds testing, do the following:
+To run systematic experiment for AdaBoost rounds testing, do the following:
 
 1) Run GenerateTest.java (java GenerateTest filestem trainingSetSize)
 2) Run RoundsExperiment on filestems from step 1 (i.e. filestem_trainingSetSize)
-   Syntax: java RoundsExperiment file1 file2 file3 file4
+   java RoundsExperiment file1 file2 file3 file4
+   E.g. java RoundsExperiment data/dna_500 data/census_1000 data/ocr17_1000 
+        data/ocr49_1000
+2) Run HeightExperiment on filestems from step 1 (i.e. filestem_trainingSetSize)
+   java RoundsExperiment file1 file2 file3 file4
    E.g. java RoundsExperiment data/dna_500 data/census_1000 data/ocr17_1000 
         data/ocr49_1000
