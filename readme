@@ -52,3 +52,14 @@ limited decision tree, which serves as our weak hypothesis.
 
 Finally, the public method predict() takes a weighted vote among each of the 
 hypotheses (using the DecisionTree predict() method).
+
+
+-------------
+
+To run sysematic experiment for AdaBoost rounds testing, do the following:
+
+1) Run GenerateTest.java (java GenerateTest filestem trainingSetSize)
+2) Run RoundsExperiment on filestems from step 1 (i.e. filestem_trainingSetSize)
+   Syntax: java RoundsExperiment file1 file2 file3 file4
+   E.g. java RoundsExperiment data/dna_500 data/census_1000 data/ocr17_1000 
+        data/ocr49_1000
