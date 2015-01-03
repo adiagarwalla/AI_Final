@@ -32,7 +32,7 @@ public class HeightExperiment {
 
         for (int i = 0; i < 4; i++)
         {
-	    int rounds = 150;
+	        int rounds = 150;
             System.out.println("DataSet is: " + filestem[i]);
 
             for (int height = 1; height <= 6; height++)
@@ -80,7 +80,7 @@ public class HeightExperiment {
                 }
 
                 System.out.println("Error rate average over " + trial + 
-                   " trials " + "for " + height + " height tree: " + sumError/trial);
+              " trials " + "for " + height + " height tree: " + sumError/trial);
             }
         }
     }
