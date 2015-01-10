@@ -207,5 +207,4 @@ public class DecisionTree implements Classifier {
 
 	d.printTestPredictions(c, filestem);
     }
-
 }
